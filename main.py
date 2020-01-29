@@ -185,10 +185,9 @@ def quit_filter(input):  # filter of the input to always
 
 
 def login_menu_choice():  # login menu sequence
-    global new_user
     login_count = 3
     active_user = None
-    print('Hello My dear noisy friend\n1 to create account\n2 to login \nany other number ='
+    print('Hello My dear noisy friend ( ▀ ͜͞ʖ▀)\n1 to create account\n2 to login \nany other number ='
           ' you are doomed to be anonymous\t\t\t\t\t\tat any time type "quit" to leave us :(')
     while True:
         try:
@@ -205,13 +204,20 @@ def login_menu_choice():  # login menu sequence
             print(f'{login_count} attempts to log in left...\n\n\n{"*" * 40}')
 
         if menu == 1:
-            print('Create new user')
             while True:
-                login, password = login_input()
-                print(40 * '*')
-                password2 = input('Repeat your password, plz...')
-                if password == password2:
-                    new_user = User(login, password, 'regs')
+                while True:
+                    try:
+                        print('Create new user')
+                        login, password = login_input()
+                        print(40 * '*')
+                        password2 = quit_filter(input('Repeat your password, plz...'))
+                        if password == password2:
+                            new_user = User(login, password, 'regs')
+                            break
+                        else:
+                            print('Passwords do not match! You can quit at any time!')
+                    except Exception as e:
+                        print(f'{e}, dude come on, its not that hard! ◕_◕')
                 if not Database(new_user).is_user():
                     Database(new_user).add_user()
                     break
