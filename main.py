@@ -287,11 +287,16 @@ def operational_menu(active_user):  # program sequence after active_user has bee
                     for ops in operators:
                         if str(op) == str(ops):
                             pip = False
-
-                if op in 'sincosancotan':
-                    nom2 = 1
-                else:
-                    nom2 = float(quit_filter(input('Nom2>>>')))
+                while True:
+                    try:
+                        if op in 'sincosancotan':
+                            nom2 = 1
+                            break
+                        else:
+                            nom2 = float(quit_filter(input('Nom2>>>')))
+                            break
+                    except Exception as e:
+                        print(f'{e}, please enter smthing, dude')
                 print('*' * 40)
                 resolt = Calculator(active_user, nom1, op, nom2)
                 print(resolt)
