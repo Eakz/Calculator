@@ -61,7 +61,7 @@ class Calculator:  # main calculation class. Has 2 levels of access "regs" and "
                f' {self.nom2 if self.nom2 != 1 else ""} is equal {self.engine()}' if self.engine() else 'Access Denied'
 
     def __repr__(self):
-        return f'{self.nom1}{self.operator}{self.nom2}={self.engine() if self.engine() != 0 else "0"}'
+        return f'{self.nom1}{self.operator}{self.nom2}={self.engine()}'
 
     def engine(self):
         import math
