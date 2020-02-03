@@ -58,23 +58,30 @@ class Calculator:  # main calculation class. Has 2 levels of access "regs" and "
 
     def __str__(self):
         return f'Operation for {self.user.login}\n{self.nom1} {self.operator}' \
-               f' {self.nom2 if self.nom2 != 1 else ""} is equal {self.engine()}' if self.engine() else 'Access denied'
+               f' {self.nom2 if self.nom2 != 1 else ""} is equal {self.engine()}' if self.engine() else 'Access Denied'
 
     def __repr__(self):
-        return f'{self.nom1}{self.operator}{self.nom2}={self.engine()}'
+        return f'{self.nom1}{self.operator}{self.nom2}={self.engine() if self.engine() != 0 else "0"}'
 
     def engine(self):
         import math
+        def div(a, b):
+            return a / b
+
         try:
-            calculations = {'+': self.nom1 + self.nom2, '-': self.nom1 - self.nom2, '*': self.nom1 * self.nom2,
-                            '/': self.nom1 / self.nom2}
+            calculations = {'+': self.nom1 + self.nom2,
+                            '-': (self.nom1 - self.nom2) if (self.nom1 - self.nom2) != 0 else '0',
+                            '*': (self.nom1 * self.nom2) if (self.nom1 * self.nom2) != 0 else '0'}
+            division = {'/': div}
             reg_calc = {'sin': math.sin(self.nom1), 'cos': math.cos(self.nom1), 'tan': math.tan(self.nom1),
                         'cotan': 1 / math.tan(self.nom1)}
             if self.user.user_group == 'regs':  # REGISTERED users operator-key withdrawal
-                return calculations.get(self.operator) or reg_calc.get(self.operator)
+                return calculations.get(self.operator) or reg_calc.get(self.operator) or division.get(self.operator)(
+                    self.nom1, self.nom2)
             else:
                 try:  # nonregistered users operator-key withdrawal
-                    return calculations[self.operator]
+
+                    return calculations.get(self.operator) or division[self.operator](self.nom1, self.nom2)
                 except KeyError:
                     print(f'{self.user.login} has no access to this operation!')
                     return None
@@ -187,7 +194,7 @@ def quit_filter(input):  # filter of the input to always
 def login_menu_choice():  # login menu sequence
     login_count = 3
     active_user = None
-    print('Hello My dear noisy friend ( ▀ ͜͞ʖ▀)\n1 to create account\n2 to login \nany other number ='
+    print('Hello My dear noisy friend \t( ▀ ͜͞ʖ▀)\n1 to create account\n2 to login \nany other number ='
           ' you are doomed to be anonymous\t\t\t\t\t\tat any time type "quit" to leave us :(')
     while True:
         try:
