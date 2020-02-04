@@ -147,21 +147,21 @@ class Database:  # database manipulation - basically I/O JSON data
     def show_stat(self, type='simple'):  # showing stat of calculations with time for given user
         if self.is_user():
             if type == 'detailed':
-                return "\n\n\n{} stat:\n{}\n#  Date:\t\t\t\t\t\t\t\t" \
-                       "Result:\t\t\tDetails:\n\n{}".format(self.user,
+                return "\n\n\n{} stat:\n{}\n#  Date:\t\t\t\t\t\t\t\t\t\t\t" \
+                       "Result:\t\t\t\t\t\tDetails:\n\n{}".format(self.user,
                                                             '=' * 40,
                                                             # returning raw pytz data log
                                                             '\n'.join(
                                                                 [
-                                                                    f"{i + 1}. {d}:\t\t{b}\t\t{c}"
+                                                                    f"{i + 1}. {d}:\t\t{b:20}\t\t\t\t{c:10}"
                                                                     for i, (
                                                                     d, b, c) in
                                                                     enumerate(
                                                                         self.find_user()[
                                                                             'log'])]))
             elif type == 'simple':
-                return "\n\n\n{} stat:\n{}\n#  Date:\t\t\t\t\t\tResult:\n{}".format(self.user, '=' * 40, '\n'.join(
-                    [f"{a + 1}. {datetime.datetime.strptime(i, '%Y-%m-%d %H:%M:%S.%f%z').strftime('%c')}:\t\t{b}\t\t"
+                return "\n\n\n{} stat:\n{}\n#  Date:\t\t\t\t\t\t\t\tResult:\n{}".format(self.user, '=' * 40, '\n'.join(
+                    [f"{a + 1}. {datetime.datetime.strptime(i, '%Y-%m-%d %H:%M:%S.%f%z').strftime(' %c ')}:\t\t\t{b}\t\t\t"
                      for
                      a, (i, b, c) in enumerate(self.find_user()['log'])]))
                 # returning formatted pytz data example Sat Jan 25 10:26:15 2020
