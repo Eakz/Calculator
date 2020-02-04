@@ -68,20 +68,42 @@ class Calculator:  # main calculation class. Has 2 levels of access "regs" and "
         def div(a, b):
             return a / b
 
+        def add(a, b):
+            return a + b
+
+        def sub(a, b):
+            return a - b if (a - b) != 0 else '0'
+
+        def mul(a, b):
+            return a * b if (a * b) != 0 else '0'
+
+        def sin(a, b=1):
+            return (math.sin(a)) if a != 0 else '0'
+
+        def cos(a, b=1):
+            return math.cos(a) if a != 0 else '0'
+
+        def tan(a, b=1):
+            return math.tan(a) if a != 0 else '0'
+
+        def cotan(a, b=1):
+            return 1 / math.tan(a)
+
         try:
-            calculations = {'+': self.nom1 + self.nom2,
-                            '-': (self.nom1 - self.nom2) if (self.nom1 - self.nom2) != 0 else '0',
-                            '*': (self.nom1 * self.nom2) if (self.nom1 * self.nom2) != 0 else '0'}
-            division = {'/': div}
-            reg_calc = {'sin': math.sin(self.nom1), 'cos': math.cos(self.nom1), 'tan': math.tan(self.nom1),
-                        'cotan': 1 / math.tan(self.nom1)}
+            calculations = {'+': add,
+                            '-': sub,
+                            '*': mul,
+                            '/': div}
+            reg_calc = {'sin': sin, 'cos': cos, 'tan': tan,
+                        'cotan': cotan}
             if self.user.user_group == 'regs':  # REGISTERED users operator-key withdrawal
-                return calculations.get(self.operator) or reg_calc.get(self.operator) or division.get(self.operator)(
-                    self.nom1, self.nom2)
+                    calculations.update(reg_calc)
+                    return calculations.get(self.operator)(self.nom1,self.nom2)
+
             else:
                 try:  # nonregistered users operator-key withdrawal
 
-                    return calculations.get(self.operator) or division[self.operator](self.nom1, self.nom2)
+                    return calculations.get(self.operator)(self.nom1, self.nom2)
                 except KeyError:
                     print(f'{self.user.login} has no access to this operation!')
                     return None
@@ -149,21 +171,22 @@ class Database:  # database manipulation - basically I/O JSON data
             if type == 'detailed':
                 return "\n\n\n{} stat:\n{}\n#  Date:\t\t\t\t\t\t\t\t\t\t\t" \
                        "Result:\t\t\t\t\t\tDetails:\n\n{}".format(self.user,
-                                                            '=' * 40,
-                                                            # returning raw pytz data log
-                                                            '\n'.join(
-                                                                [
-                                                                    f"{i + 1}. {d}:\t\t{b:20}\t\t\t\t{c:10}"
-                                                                    for i, (
-                                                                    d, b, c) in
-                                                                    enumerate(
-                                                                        self.find_user()[
-                                                                            'log'])]))
+                                                                  '=' * 40,
+                                                                  # returning raw pytz data log
+                                                                  '\n'.join(
+                                                                      [
+                                                                          f"{i + 1}. {d}:\t\t{b:20}\t\t\t\t{c:10}"
+                                                                          for i, (
+                                                                          d, b, c) in
+                                                                          enumerate(
+                                                                              self.find_user()[
+                                                                                  'log'])]))
             elif type == 'simple':
                 return "\n\n\n{} stat:\n{}\n#  Date:\t\t\t\t\t\t\t\tResult:\n{}".format(self.user, '=' * 40, '\n'.join(
-                    [f"{a + 1}. {datetime.datetime.strptime(i, '%Y-%m-%d %H:%M:%S.%f%z').strftime(' %c ')}:\t\t\t{b}\t\t\t"
-                     for
-                     a, (i, b, c) in enumerate(self.find_user()['log'])]))
+                    [
+                        f"{a + 1}. {datetime.datetime.strptime(i, '%Y-%m-%d %H:%M:%S.%f%z').strftime(' %c ')}:\t\t\t{b}\t\t\t"
+                        for
+                        a, (i, b, c) in enumerate(self.find_user()['log'])]))
                 # returning formatted pytz data example Sat Jan 25 10:26:15 2020
         print('\n\n\n\n')
 
@@ -286,10 +309,10 @@ def operational_menu(active_user):  # program sequence after active_user has bee
         elif oper == 3:
             operators = ['*', '+', '-', '/', 'sin', 'cos', 'tan', 'cotan']
             print('Calculations')
-            if active_user.user_group=='regs':
-                print(*operators,sep=' | ')
+            if active_user.user_group == 'regs':
+                print(*operators, sep=' | ')
             else:
-                print(*operators[:4],sep=' | ')
+                print(*operators[:4], sep=' | ')
             while True:
                 while True:
                     try:
