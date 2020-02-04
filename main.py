@@ -69,7 +69,7 @@ class Calculator:  # main calculation class. Has 2 levels of access "regs" and "
             return a / b
 
         def add(a, b):
-            return a + b
+            return a + b if (a+b)!=0 else '0'
 
         def sub(a, b):
             return a - b if (a - b) != 0 else '0'
