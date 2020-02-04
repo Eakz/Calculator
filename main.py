@@ -285,7 +285,11 @@ def operational_menu(active_user):  # program sequence after active_user has bee
                 print('Anons have no log, you rediska')
         elif oper == 3:
             operators = ['*', '+', '-', '/', 'sin', 'cos', 'tan', 'cotan']
-            print('Calculations = *,+,-,/,sin,cos,tan,cotan')
+            print('Calculations')
+            if active_user.user_group=='regs':
+                print(*operators,sep=' | ')
+            else:
+                print(*operators[:4],sep=' | ')
             while True:
                 while True:
                     try:
